@@ -12,7 +12,7 @@ object Main {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  val serverSource = Http().bind(interface = "localhost", port = 8080)
+  val serverSource = Http().bind(interface = "0.0.0.0", port = 8080)
 
   val requestHandler: HttpRequest => HttpResponse = {
 
@@ -26,7 +26,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     serverSource.to(Sink.foreach { connection =>
-      connection handleWithSyncHandler requestHandler
+      connection.handleWithSyncHandler(requestHandler)
     }).run()
   }
 }
